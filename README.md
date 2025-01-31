@@ -1,4 +1,4 @@
-# **Unusual Food Pairings Around The World**
+## **Unusual Food Pairings Around The World**
 
 **Project Overview**  
 The Unusual Food Pairings Around The World project is an innovative e-commerce platform that introduces users to unique and surprising food combinations from various cultures. The goal of this project is to explore the intersection of taste and creativity by offering a curated selection of unusual yet delicious food pairings from across the globe.
