@@ -19,3 +19,6 @@ This project follows the MERN stack (MongoDB, Express.js, React.js, and Node.js)
 - **Database**: MongoDB
 - **Authentication**: JWT (JSON Web Token)
 - **API Architecture**: RESTful APIs
+
+
+Render deployed link :- https://s86-unusual-food-pairings-around-the.onrender.com
