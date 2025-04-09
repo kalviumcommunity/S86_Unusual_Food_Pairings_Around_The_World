@@ -1,0 +1,15 @@
+{
+  "name": "s86_unusual_food_pairings_around_the_world",
+  "version": "1.0.0",
+  "description": "**Project Overview**  \r The Unusual Food Pairings Around The World project is an innovative e-commerce platform that introduces users to unique and surprising food combinations from various cultures. The goal of this project is to explore the intersection of taste and creativity by offering a curated selection of unusual yet delicious food pairings from across the globe.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
