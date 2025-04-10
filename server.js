@@ -1,32 +1,34 @@
-// server.js
-const express = require('express');
-const mongoose = require('mongoose');
-require('dotenv').config();
+const express = require("express");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const foodPairingRoutes = require("./routes/foodPairingRoutes"); // Make sure this path matches your folder structure
+
+dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
-let dbStatus = 'Not connected';
+// Middleware
+app.use(express.json());
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => {
-  dbStatus = 'Connected to MongoDB';
-  console.log(dbStatus);
-})
-.catch((err) => {
-  dbStatus = 'Failed to connect';
-  console.error(err);
+mongoose.connect(process.env.MONGODB_URI)
+.then(() => console.log("MongoDB connected successfully"))
+.catch((err) => console.error("MongoDB connection error:", err));
+
+// Home Route (for DB connection check)
+app.get("/", (req, res) => {
+  if (mongoose.connection.readyState === 1) {
+    res.send("Database connected successfully");
+  } else {
+    res.send("Database not connected");
+  }
 });
 
-// Home Route
-app.get('/', (req, res) => {
-  res.send(`Database Connection Status: ${dbStatus}`);
-});
+// API Routes
+app.use("/api/food-pairings", foodPairingRoutes);
 
+// Start Server
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
