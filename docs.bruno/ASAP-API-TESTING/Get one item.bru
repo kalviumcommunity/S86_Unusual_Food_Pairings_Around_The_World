@@ -1,0 +1,15 @@
+meta {
+  name: Get one item
+  type: http
+  seq: 6
+}
+
+get {
+  url: http://localhost:5000/api/food-pairings/67f753d81476a79076a34596
+  body: none
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}

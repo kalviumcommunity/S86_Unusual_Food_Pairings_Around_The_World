@@ -1,0 +1,28 @@
+meta {
+  name: Update item
+  type: http
+  seq: 5
+}
+
+put {
+  url: http://localhost:5000/api/food-pairings/67f753d81476a79076a34596
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Mango and Chili",
+    "origin": "India",
+    "description": "Ripe mango slices with a dash of red chili powder.",
+    "ingredients": ["Mango", "Red Chili Powder"],
+    "price": 9.5,
+    "rating": 9.8,
+    "available": true
+  }
+  
+}
