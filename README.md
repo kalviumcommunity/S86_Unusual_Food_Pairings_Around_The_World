@@ -22,3 +22,5 @@ This project follows the MERN stack (MongoDB, Express.js, React.js, and Node.js)
 
 
 Render deployed link :- https://s86-unusual-food-pairings-around-the.onrender.com
+
+Frontend deployed link :- https://unusual-food-pairings-around-the-world.pages.dev/
