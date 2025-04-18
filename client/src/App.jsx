@@ -1,4 +1,5 @@
-import FoodPairingCard from "./components/FoodPairingCard";
+import React from 'react';
+import FoodPairingCard from './components/FoodPairingCard';
 
 function App() {
   const dummyPairing = {
@@ -20,4 +21,3 @@ function App() {
 }
 
 export default App;
-  
