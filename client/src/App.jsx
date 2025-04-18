@@ -1,10 +1,21 @@
+import React from 'react';
+import FoodPairingCard from './components/FoodPairingCard';
+
 function App() {
+  const dummyPairing = {
+    name: "Mango and Chili",
+    origin: "Mexico",
+    description: "A sweet and spicy combo that surprises the palate.",
+    ingredients: ["Mango", "Chili Powder"],
+    price: 5.99,
+    rating: 4.5,
+    available: true,
+  };
+
   return (
-    <div style={{ padding: "2rem", fontFamily: "Arial" }}>
-      <h1>Unusual Food Pairings Around the World</h1>
-      <p>
-        Explore unique and surprising food combinations from different cultures globally.
-      </p>
+    <div>
+      <h1>Unusual Food Pairings</h1>
+      <FoodPairingCard pairing={dummyPairing} />
     </div>
   );
 }
