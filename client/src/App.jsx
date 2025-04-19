@@ -1,21 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import FoodPairingCard from './components/FoodPairingCard';
 
 function App() {
-  const dummyPairing = {
-    name: "Mango and Chili",
-    origin: "Mexico",
-    description: "A sweet and spicy combo that surprises the palate.",
-    ingredients: ["Mango", "Chili Powder"],
-    price: 5.99,
-    rating: 4.5,
-    available: true,
-  };
+  const [foodPairings, setFoodPairings] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:5000/api/food-pairings') // Adjust the URL as needed
+      .then((response) => {
+        setFoodPairings(response.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching food pairings:', error);
+      });
+  }, []);
 
   return (
     <div>
       <h1>Unusual Food Pairings</h1>
-      <FoodPairingCard pairing={dummyPairing} />
+      {foodPairings.length === 0 ? (
+        <p>Loading food pairings...</p>
+      ) : (
+        foodPairings.map((pairing) => (
+          <FoodPairingCard key={pairing._id} pairing={pairing} />
+        ))
+      )}
     </div>
   );
 }

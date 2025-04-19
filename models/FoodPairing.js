@@ -1,7 +1,6 @@
-// models/FoodPairing.js
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const FoodPairingSchema = new mongoose.Schema({
+const foodPairingSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -12,6 +11,7 @@ const FoodPairingSchema = new mongoose.Schema({
   },
   description: {
     type: String,
+    required: true,
   },
   ingredients: {
     type: [String],
@@ -23,7 +23,7 @@ const FoodPairingSchema = new mongoose.Schema({
   },
   rating: {
     type: Number,
-    default: 0,
+    required: true,
   },
   available: {
     type: Boolean,
@@ -31,4 +31,4 @@ const FoodPairingSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("FoodPairing", FoodPairingSchema, "pairings");
+module.exports = mongoose.model('FoodPairing', foodPairingSchema);
