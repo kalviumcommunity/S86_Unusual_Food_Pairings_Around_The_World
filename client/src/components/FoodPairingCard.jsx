@@ -50,3 +50,5 @@ FoodPairingCard.propTypes = {
 };
 
 export default FoodPairingCard;
+
+
