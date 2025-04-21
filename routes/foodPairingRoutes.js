@@ -1,9 +1,26 @@
 const express = require('express');
+const { body, validationResult } = require('express-validator');
 const router = express.Router();
 const FoodPairing = require('../models/FoodPairing');
 
-// CREATE
-router.post('/', async (req, res) => {
+// Validation Middleware
+const validatePairing = [
+  body('name').notEmpty().withMessage('Name is required'),
+  body('origin').notEmpty().withMessage('Origin is required'),
+  body('description').notEmpty().withMessage('Description is required'),
+  body('ingredients').isArray({ min: 1 }).withMessage('Ingredients must be an array with at least one item'),
+  body('price').isFloat({ gt: 0 }).withMessage('Price must be a number greater than 0'),
+  body('rating').isFloat({ min: 0, max: 5 }).withMessage('Rating must be between 0 and 5'),
+  body('available').isBoolean().withMessage('Available must be a boolean'),
+];
+
+// CREATE with Validation
+router.post('/', validatePairing, async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
+
   try {
     const newPairing = new FoodPairing(req.body);
     const saved = await newPairing.save();
@@ -33,7 +50,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// UPDATE
+// UPDATE (optional: you can add validation like POST here too)
 router.put('/:id', async (req, res) => {
   try {
     const updated = await FoodPairing.findByIdAndUpdate(req.params.id, req.body, { new: true });
