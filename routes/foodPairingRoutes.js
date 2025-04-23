@@ -12,6 +12,7 @@ const validatePairing = [
   body('price').isFloat({ gt: 0 }).withMessage('Price must be a number greater than 0'),
   body('rating').isFloat({ min: 0, max: 5 }).withMessage('Rating must be between 0 and 5'),
   body('available').isBoolean().withMessage('Available must be a boolean'),
+  body('created_by').notEmpty().withMessage('created_by is required'),
 ];
 
 // CREATE with Validation
@@ -30,10 +31,11 @@ router.post('/', validatePairing, async (req, res) => {
   }
 });
 
-// READ ALL
+// READ ALL (support filter by created_by)
 router.get('/', async (req, res) => {
   try {
-    const items = await FoodPairing.find();
+    const filter = req.query.created_by ? { created_by: req.query.created_by } : {};
+    const items = await FoodPairing.find(filter).populate('created_by');
     res.json(items);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -43,14 +45,15 @@ router.get('/', async (req, res) => {
 // READ SINGLE
 router.get('/:id', async (req, res) => {
   try {
-    const item = await FoodPairing.findById(req.params.id);
+    const item = await FoodPairing.findById(req.params.id).populate('created_by');
+    if (!item) return res.status(404).json({ error: 'Item not found' });
     res.json(item);
   } catch (err) {
-    res.status(404).json({ error: 'Item not found' });
+    res.status(500).json({ error: err.message });
   }
 });
 
-// UPDATE (optional: you can add validation like POST here too)
+// UPDATE
 router.put('/:id', async (req, res) => {
   try {
     const updated = await FoodPairing.findByIdAndUpdate(req.params.id, req.body, { new: true });
