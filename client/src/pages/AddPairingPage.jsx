@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function AddPairing({ onAdd }) {
+function AddPairingPage() {
   const [formData, setFormData] = useState({
     name: '',
     origin: '',
@@ -9,8 +9,19 @@ function AddPairing({ onAdd }) {
     ingredients: '',
     price: '',
     rating: '',
-    available: false
+    available: true,
+    created_by: ''
   });
+
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    // Fetch users for dropdown
+    axios
+      .get(`${import.meta.env.VITE_API_URL}/api/users`)
+      .then((res) => setUsers(res.data))
+      .catch((err) => console.error('Error fetching users:', err));
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -22,100 +33,48 @@ function AddPairing({ onAdd }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const payload = {
+      ...formData,
+      ingredients: formData.ingredients.split(',').map((item) => item.trim())
+    };
+
     try {
-      const pairingData = {
-        ...formData,
-        ingredients: formData.ingredients.split(',').map((item) => item.trim()),
-        price: parseFloat(formData.price),
-        rating: parseFloat(formData.rating)
-      };
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/food-pairings`, pairingData);
-      onAdd(res.data);
-      setFormData({
-        name: '', origin: '', description: '', ingredients: '', price: '', rating: '', available: false
-      });
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/food-pairings`, payload);
+      alert('Food pairing added successfully!');
     } catch (err) {
       console.error('Error adding pairing:', err);
+      alert(err?.response?.data?.errors?.[0]?.msg || 'Failed to add pairing.');
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-200 via-pink-200 to-purple-200 flex items-center justify-center p-6">
-      <div className="w-full max-w-xl bg-white rounded-3xl shadow-2xl p-8 border-4 border-pink-300">
-        <h2 className="text-3xl font-extrabold text-pink-600 mb-6 text-center font-[Quicksand]">🍍 Add a Food Pairing</h2>
-        <form onSubmit={handleSubmit} className="space-y-4 text-gray-700">
-          <input
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Name"
-            required
-            className="w-full p-3 rounded-xl border-2 border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-          />
-          <input
-            name="origin"
-            value={formData.origin}
-            onChange={handleChange}
-            placeholder="Origin"
-            required
-            className="w-full p-3 rounded-xl border-2 border-green-300 focus:outline-none focus:ring-2 focus:ring-green-300"
-          />
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            placeholder="Description"
-            required
-            className="w-full p-3 rounded-xl border-2 border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-300"
-          />
-          <input
-            name="ingredients"
-            value={formData.ingredients}
-            onChange={handleChange}
-            placeholder="Ingredients (comma separated)"
-            required
-            className="w-full p-3 rounded-xl border-2 border-orange-300 focus:outline-none focus:ring-2 focus:ring-orange-300"
-          />
-          <div className="flex gap-4">
-            <input
-              name="price"
-              type="number"
-              value={formData.price}
-              onChange={handleChange}
-              placeholder="Price"
-              required
-              className="flex-1 p-3 rounded-xl border-2 border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-300"
-            />
-            <input
-              name="rating"
-              type="number"
-              value={formData.rating}
-              onChange={handleChange}
-              placeholder="Rating"
-              required
-              className="flex-1 p-3 rounded-xl border-2 border-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-300"
-            />
-          </div>
-          <label className="flex items-center gap-2 text-pink-600 font-medium mt-2">
-            <input
-              name="available"
-              type="checkbox"
-              checked={formData.available}
-              onChange={handleChange}
-              className="accent-pink-500"
-            />
-            Available
-          </label>
-          <button
-            type="submit"
-            className="w-full py-3 bg-gradient-to-r from-pink-400 via-yellow-300 to-lime-400 text-black font-bold rounded-xl shadow-lg hover:scale-105 transition-transform"
-          >
-            Add Pairing 🍓
-          </button>
-        </form>
-      </div>
+    <div style={{ padding: '2rem', maxWidth: '600px', margin: 'auto' }}>
+      <h2>Add a New Food Pairing</h2>
+      <form onSubmit={handleSubmit}>
+        <input name="name" placeholder="Name" onChange={handleChange} required /><br />
+        <input name="origin" placeholder="Origin" onChange={handleChange} required /><br />
+        <textarea name="description" placeholder="Description" onChange={handleChange} required /><br />
+        <input name="ingredients" placeholder="Ingredients (comma separated)" onChange={handleChange} required /><br />
+        <input name="price" type="number" step="0.01" placeholder="Price" onChange={handleChange} required /><br />
+        <input name="rating" type="number" step="0.1" placeholder="Rating (0-5)" onChange={handleChange} required /><br />
+        <label>
+          Available:
+          <input name="available" type="checkbox" checked={formData.available} onChange={handleChange} />
+        </label><br /><br />
+
+        <label>User:</label>
+        <select name="created_by" value={formData.created_by} onChange={handleChange} required>
+          <option value="">-- Select User --</option>
+          {users.map((user) => (
+            <option key={user._id} value={user._id}>{user.name}</option>
+          ))}
+        </select><br /><br />
+
+        <button type="submit">Add Pairing</button>
+      </form>
     </div>
   );
 }
 
-export default AddPairing;
+export default AddPairingPage;

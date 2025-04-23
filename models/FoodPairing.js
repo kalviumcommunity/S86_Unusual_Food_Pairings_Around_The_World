@@ -29,6 +29,11 @@ const foodPairingSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
+  created_by: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
 });
 
-module.exports = mongoose.model('FoodPairing', foodPairingSchema);
+module.exports = mongoose.model('FoodPairing', foodPairingSchema); 
